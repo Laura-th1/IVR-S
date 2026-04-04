@@ -11,5 +11,3 @@ echo "<Gather input='speech' method='POST'
 echo "</Gather>";
 
 echo "</Response>";
-
-
