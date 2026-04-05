@@ -1,32 +1,34 @@
-<?php
-require_once "../config/bd.php";
+<?php 
+require_once __DIR__ . "/../config/db.php";
 
 header("Content-Type: text/xml");
 
-//debug temporal
+// Debug temporal (opcional)
 @file_put_contents("log.txt", print_r($_POST, true) . "\n--- " . date('Y-m-d H:i:s') . " ---\n", FILE_APPEND);
 
 $telefono = $_POST['From'] ?? '';
 $respuesta = $_POST['SpeechResult'] ?? '';
 $step = $_GET['step'] ?? 1;
 
+echo "<Response>";
+
+// Validar respuesta vacía
 if (empty($respuesta)) {
-    echo "<Response>";
     echo "<Say voice='Polly.Lupe'>No entendí tu respuesta. Intenta nuevamente por favor.</Say>";
     echo "<Redirect>https://ivr-3knv.onrender.com/controllers/voice.php</Redirect>";
     echo "</Response>";
     exit;
 }
 
-echo "<Response>";
-
 if ($step == 1) {
 
     // Guardar nombre
-   
-    $query = "INSERT INTO respuestas (telefono, pregunta, respuesta) VALUES ('" . pg_escape_string($telefono) . "', 'Nombre', '" . pg_escape_string($respuesta) . "')";
-    $result = pg_query($conn, $query);
-    
+    $result = pg_query_params(
+        $conn,
+        "INSERT INTO respuestas (telefono, pregunta, respuesta) VALUES ($1, $2, $3)",
+        [$telefono, 'Nombre', $respuesta]
+    );
+
     if (!$result) {
         echo "<Say voice='Polly.Lupe'>Error al guardar. Intenta nuevamente.</Say>";
     } else {
@@ -39,10 +41,12 @@ if ($step == 1) {
 } elseif ($step == 2) {
 
     // Guardar edad
-    
-    $query = "INSERT INTO respuestas (telefono, pregunta, respuesta) VALUES ('" . pg_escape_string($telefono) . "', 'Edad', '" . pg_escape_string($respuesta) . "')";
-    $result = pg_query($conn, $query);
-    
+    $result = pg_query_params(
+        $conn,
+        "INSERT INTO respuestas (telefono, pregunta, respuesta) VALUES ($1, $2, $3)",
+        [$telefono, 'Edad', $respuesta]
+    );
+
     if (!$result) {
         echo "<Say voice='Polly.Lupe'>Error al guardar edad.</Say>";
     } else {
@@ -51,3 +55,4 @@ if ($step == 1) {
 }
 
 echo "</Response>";
+?>
