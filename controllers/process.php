@@ -35,7 +35,7 @@ if ($step == 1) {
         echo "<Say voice='Polly.Lupe'>Gracias $respuesta. Ahora dime tu edad.</Say>";
     }
 
-    echo "<Gather input='speech' method='POST' timeout='5'
+    echo "<Gather input='speech' method='POST' timeout='5' language='es-ES' speechTimeout='auto'
           action='https://ivr-3knv.onrender.com/controllers/process.php?step=2'></Gather>";
 
 } elseif ($step == 2) {
