@@ -1,13 +1,14 @@
 <?php
-$host = "dpg-d6v112s50q8c739c5g8g-a";
-$db   = "bd_ivr";
-$user = "bd_ivr_user";
-$pass = "qyQqnpz9HAABB9e4nr0BVTy0JGXzcYGU";
+$host = getenv("DB_HOST");
+$user = getenv("DB_USER");
+$pass = getenv("DB_PASS");
+$db   = getenv("DB_NAME");
 
-$conn = pg_connect("host=$host dbname=$db user=$user password=$pass");
+$conn = new mysqli($host, $user, $pass, $db);
 
-if (!$conn) {
-    die("Error de conexión");
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
 }
 
+$conn->set_charset("utf8mb4");
 ?>
